@@ -21,13 +21,29 @@ func main() {
 		if err != nil {
 			log.Fatalf("Failed to convert string value to int: %s", err)
 		}
-		totalFuel += FuelRequired(v)
+		totalFuel += TotalFuel(v)
 	}
 
 	fmt.Printf("Total fuel required = %d\n", totalFuel)
 }
 
-// FuelRequired calculates the fuel required for a module of a specific mass.
+// TotalFuel calculates the total fuel required for a module of a given mass,
+// including any fuel required for the extra fuel.
+func TotalFuel(mass int) int {
+	m := mass
+	var tot int
+	for {
+		f := FuelRequired(m)
+		if f <= 0 {
+			break
+		}
+		m = f
+		tot += m
+	}
+	return tot
+}
+
+// FuelRequired calculates the fuel required for specific mass.
 func FuelRequired(mass int) int {
 	return (mass / 3) - 2
 }
