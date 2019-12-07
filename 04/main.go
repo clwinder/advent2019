@@ -31,7 +31,7 @@ func main() {
 		}
 	}
 
-	fmt.Println("Part 1: ", numValid)
+	fmt.Println(numValid)
 }
 
 // ValidatePassword validates that a password meets all of the requirements.
@@ -40,17 +40,49 @@ func ValidatePassword(password string) bool {
 	if len(pwSplit) != 6 {
 		return false
 	}
-	var hasPair bool
+
 	for i := 0; i < len(pwSplit); i++ {
 		if i == 0 {
 			continue
-		}
-		if pwSplit[i] == pwSplit[i-1] {
-			hasPair = true
 		}
 		if pwSplit[i] < pwSplit[i-1] {
 			return false
 		}
 	}
+
+	var hasPair bool
+	i := 0
+	for {
+		if i >= len(pwSplit)-1 {
+			break
+		}
+		if pwSplit[i] == pwSplit[i+1] {
+			if i == len(pwSplit)-2 {
+				hasPair = true
+				break
+			}
+			if pwSplit[i] == pwSplit[i+2] {
+				i += 3
+				if i >= len(pwSplit)-1 {
+					break
+				}
+				if pwSplit[i] == pwSplit[i-3] {
+					i++
+					if i >= len(pwSplit)-1 {
+						break
+					}
+					if pwSplit[i] == pwSplit[i-3] {
+						i++
+					}
+				}
+			} else {
+				hasPair = true
+				break
+			}
+		} else {
+			i++
+		}
+	}
+
 	return hasPair
 }

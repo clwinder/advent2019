@@ -11,7 +11,7 @@ func TestValidatePassword(t *testing.T) {
 	tests := []test{
 		test{
 			password:       "111111",
-			expectedResult: true,
+			expectedResult: false,
 		},
 		test{
 			password:       "223450",
@@ -19,6 +19,26 @@ func TestValidatePassword(t *testing.T) {
 		},
 		test{
 			password:       "123789",
+			expectedResult: false,
+		},
+		test{
+			password:       "112233",
+			expectedResult: true,
+		},
+		test{
+			password:       "123444",
+			expectedResult: false,
+		},
+		test{
+			password:       "111122",
+			expectedResult: true,
+		},
+		test{
+			password:       "223333",
+			expectedResult: true,
+		},
+		test{
+			password:       "244444",
 			expectedResult: false,
 		},
 	}
