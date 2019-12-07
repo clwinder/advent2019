@@ -9,6 +9,12 @@ import (
 	"strings"
 )
 
+// Day03 represents the answers for the day 3 problem.
+type Day03 struct {
+	part1 int
+	part2 int
+}
+
 // CartesianCoord represents the cartesian coordinate system.
 type CartesianCoord struct {
 	x int
@@ -24,33 +30,39 @@ func main() {
 	path1 := strings.Split(values[0], ",")
 	path2 := strings.Split(values[1], ",")
 
-	nearest, err := NearestDistance(path1, path2)
+	answers, err := NearestDistance(path1, path2)
 	if err != nil {
 		log.Fatalf("Failed to find nearest distance: %s", err)
 	}
-	fmt.Println("Part 1: ", nearest)
+	fmt.Println("Part 1: ", answers.part1)
+	fmt.Println("Part 2: ", answers.part2)
 }
 
-// NearestDistance calculated the Manhattan distance to the nearest point to the origin
-// where the two wires cross.
-func NearestDistance(path1, path2 []string) (int, error) {
+// NearestDistance calculates the Manhattan distance to the nearest point to the origin
+// where the two wires cross, and the shortest path to an intersection.
+func NearestDistance(path1, path2 []string) (Day03, error) {
 	log.Println("Started looking for nearest intersect")
 	coords1, err := PathToCoords(path1)
 	if err != nil {
-		return 0, err
+		return Day03{}, err
 	}
 	coords2, err := PathToCoords(path2)
 	if err != nil {
-		return 0, err
+		return Day03{}, err
 	}
 
 	var distances []int
-	for _, c1 := range coords1 {
-		for _, c2 := range coords2 {
+	var pathLengths []int
+	for i, c1 := range coords1 {
+		for j, c2 := range coords2 {
 			if (c1.x == c2.x) && (c1.y == c2.y) {
 				dist := manhattanDist(c1.x, c1.y)
 				if dist != 0 {
 					distances = append(distances, dist)
+				}
+				pathLength := i + j
+				if pathLength != 0 {
+					pathLengths = append(pathLengths, pathLength)
 				}
 			}
 		}
@@ -58,7 +70,10 @@ func NearestDistance(path1, path2 []string) (int, error) {
 
 	log.Println("Finished looking for nearest intersect")
 
-	return minInt(distances), nil
+	return Day03{
+		part1: minInt(distances),
+		part2: minInt(pathLengths),
+	}, nil
 }
 
 // PathToCoords converts the path from instructions to cartiesian coordinates.
